@@ -1,0 +1,26 @@
+name: convert md to pdf
+# 控制何时运行这个workflow
+on:
+  push:
+
+jobs:
+  converttopdf:
+    name: Build PDF
+    # 运行在最新版本的ubuntu镜像上
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: new pdf
+        run: |-
+          npm install -g md-to-pdf
+          mkdir -p _output
+          cd md
+          for f in *.md; do cat $f; done | md-to-pdf  > ../_output/testpdf.pdf
+          cd ..
+          
+      - name: Uploadpdf
+        uses: actions/upload-artifact@v1
+        with:
+          name: output
+          path: _output
